@@ -33,7 +33,7 @@ public class GUI extends JFrame {
         // Search bar
         JTextField searchBar = new JTextField();
         searchBar.setBounds(50, 30, 300, 35);
-        searchBar.setFont(new Font("Serif", Font.PLAIN, 20));
+        searchBar.setFont(new Font("Calibri", Font.PLAIN, 20));
         add(searchBar);
 
         // Search button
@@ -41,6 +41,48 @@ public class GUI extends JFrame {
         searchButton.setBounds(370, 30, 80, 35);
         searchButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         add(searchButton);
+
+        // Weather icons
+        JLabel weatherConditionIcon = new JLabel(loadImage("src/assets/sunny.png"));
+        weatherConditionIcon.setBounds(50, 100, 100, 100);
+        add(weatherConditionIcon);
+
+        // Temperature label
+        JLabel temperatureLabel = new JLabel("25°C");
+        temperatureLabel.setBounds(170, 100, 200, 100);
+        temperatureLabel.setFont(new Font("Calibri", Font.PLAIN, 60));
+        temperatureLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        add(temperatureLabel);
+
+        // Weather condition description
+        JLabel weatherConditionLabel = new JLabel("Sunny");
+        weatherConditionLabel.setBounds(170, 160, 200, 50);
+        weatherConditionLabel.setFont(new Font("Calibri", Font.PLAIN, 30));
+        weatherConditionLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        add(weatherConditionLabel);
+
+        // Humidity label
+        JLabel humidityLabel = new JLabel(loadImage("src/assets/humidity.png"));
+        humidityLabel.setBounds(50, 220, 50, 50);
+        add(humidityLabel);
+
+        // Humidity value
+        JLabel humidityValueLabel = new JLabel("60%");
+        humidityValueLabel.setBounds(110, 220, 100, 50);
+        humidityValueLabel.setFont(new Font("Calibri", Font.PLAIN, 20));
+        add(humidityValueLabel);
+
+        // Wind speed label
+        JLabel windSpeedLabel = new JLabel(loadImage("src/assets/wind.png"));
+        windSpeedLabel.setBounds(250, 220, 50, 50);
+        add(windSpeedLabel);
+
+        // Wind speed value
+        JLabel windSpeedValueLabel = new JLabel("15 km/h");
+        windSpeedValueLabel.setBounds(310, 220, 100, 50);
+        windSpeedValueLabel.setFont(new Font("Calibri", Font.PLAIN, 20));
+        add(windSpeedValueLabel);
+
 
     }
 
