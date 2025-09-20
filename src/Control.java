@@ -8,8 +8,8 @@ public class Control {
             @Override
             public void run() {
 
-                //new GUI().setVisible(true);
-                System.out.println(WeatherApi.getLocationData("New York"));
+                new GUI().setVisible(true);
+                //System.out.println(WeatherApi.getLocationData("New York"));
             }
 
         });
