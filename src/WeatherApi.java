@@ -8,26 +8,32 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
 
-public class WeatherApi {
+public class WeatherApi
+{
 
-    public static JSONObject weatherData(String city){
+    public static JSONObject weatherData(String city)
+    {
 
         JSONObject cityData = getLocationData(city);
-        if(cityData == null){
+        if(cityData == null)
+        {
             System.out.println("City not found");
             return null;
         }
+
         double latitude = (double) cityData.get("latitude");
         double longitude = (double) cityData.get("longitude");
 
         String urlString ="https://api.open-meteo.com/v1/forecast?latitude=" +
                 latitude+ "&longitude="+ longitude + "&hourly=temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m";
 
-        try{
+        try
+        {
 
             HttpURLConnection connection = fetchApiResponse(urlString);
 
-            if(connection.getResponseCode() != 200){
+            if(connection.getResponseCode() != 200)
+            {
 
                 System.out.println("Error fetching weather data");
                 return null;
@@ -36,7 +42,8 @@ public class WeatherApi {
 
             StringBuilder resultJson = new StringBuilder();
             Scanner scanner = new Scanner(connection.getInputStream());
-            while(scanner.hasNextLine()){
+            while(scanner.hasNextLine())
+            {
                 resultJson.append(scanner.nextLine());
             }
 
@@ -77,7 +84,9 @@ public class WeatherApi {
         return weatherData;
 
 
-        }catch (Exception e){
+        }
+        catch (Exception e)
+        {
             e.printStackTrace();
         }
 
@@ -87,7 +96,8 @@ public class WeatherApi {
 
 
     // Fetch location data by city name, will find the very first result
-    public static JSONObject getLocationData(String cityName) {
+    public static JSONObject getLocationData(String cityName)
+    {
 
         // Implement API call to get location data by city name
         cityName = cityName.replaceAll(" ", "+");
@@ -95,10 +105,12 @@ public class WeatherApi {
         String urlString = "https://geocoding-api.open-meteo.com/v1/search?name=" +
                 cityName + "&count=1&language=en&format=json";
 
-        try{
+        try
+        {
             HttpURLConnection apiConnection = fetchApiResponse(urlString);
 
-            if(apiConnection.getResponseCode() != 200) {
+            if(apiConnection.getResponseCode() != 200)
+            {
                 System.out.println("Error could not connect to API");
                 return null;
             }// end if
@@ -109,24 +121,29 @@ public class WeatherApi {
             JSONObject responseObj = (JSONObject) parser.parse(jsonResponse);
 
             JSONArray resultsArray = (JSONArray) responseObj.get("results");
-            if (resultsArray == null || resultsArray.isEmpty()){
+            if (resultsArray == null || resultsArray.isEmpty())
+            {
 
                 return null;
 
             }
-            else{
+            else
+            {
                 return (JSONObject) resultsArray.get(0);
             }
 
 
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
             e.printStackTrace();
         }
 
         return null; // Placeholder return
     }
 
-    private static HttpURLConnection fetchApiResponse(String urlString){
+    private static HttpURLConnection fetchApiResponse(String urlString)
+    {
         try{
             URL url = new URL(urlString);
             HttpURLConnection apiConnection = (HttpURLConnection) url.openConnection();
@@ -142,7 +159,8 @@ public class WeatherApi {
 
     }// end fetchApiResponse
 
-    private static String readApiResponse(HttpURLConnection apiConnection){
+    private static String readApiResponse(HttpURLConnection apiConnection)
+    {
 
         try{
             StringBuilder resultJson = new StringBuilder();
@@ -166,7 +184,8 @@ public class WeatherApi {
 
     }// end readApiResponse
 
-    private static int findIndexOfCurrentHour(JSONArray timeList){
+    private static int findIndexOfCurrentHour(JSONArray timeList)
+    {
         String currentHour = getCurrentTime();
 
         for(int i = 0; i < timeList.size(); i++){
@@ -180,7 +199,8 @@ public class WeatherApi {
         return 0;
     }
 
-    public static String getCurrentTime(){
+    public static String getCurrentTime()
+    {
 
         LocalDateTime currentDateTime = LocalDateTime.now();
 
@@ -193,7 +213,8 @@ public class WeatherApi {
     }// End getCurrentTime
 
     // Gets the weather code and converts it to a string value
-    private static String convertWeatherCode(long weatherCode){
+    private static String convertWeatherCode(long weatherCode)
+    {
 
         String weatherCondition = "";
         if (weatherCode == 0L)
