@@ -13,6 +13,10 @@ public class WeatherApi {
     public static JSONObject weatherData(String city){
 
         JSONObject cityData = getLocationData(city);
+        if(cityData == null){
+            System.out.println("City not found");
+            return null;
+        }
         double latitude = (double) cityData.get("latitude");
         double longitude = (double) cityData.get("longitude");
 
@@ -51,11 +55,26 @@ public class WeatherApi {
             JSONArray temperatureList = (JSONArray) hourly.get("temperature_2m");
             double temperature = (double) temperatureList.get(index);
 
-            JSONArray weatherCode = (JSONArray) hourly.get("weathercode");
+            JSONArray weatherCode = (JSONArray) hourly.get("weather_code");
             String weatherCondition = convertWeatherCode((long) weatherCode.get(index));
 
+            JSONArray relativeHumidity = (JSONArray) hourly.get("relative_humidity_2m");
+            long humidity = (long) relativeHumidity.get(index);
+
+            JSONArray windSpeedData = (JSONArray) hourly.get("wind_speed_10m");
+            double windSpeed = (double) windSpeedData.get(index);
+
+            // To access the data in frontend
+            JSONObject weatherData = new JSONObject();
+            weatherData.put("temperature", temperature);
+            weatherData.put("humidity", humidity);
+            weatherData.put("weatherCondition", weatherCondition);
+            weatherData.put("windSpeed", windSpeed);
 
 
+
+
+        return weatherData;
 
 
         }catch (Exception e){
@@ -90,7 +109,15 @@ public class WeatherApi {
             JSONObject responseObj = (JSONObject) parser.parse(jsonResponse);
 
             JSONArray resultsArray = (JSONArray) responseObj.get("results");
-            return (JSONObject) resultsArray.get(0);
+            if (resultsArray == null || resultsArray.isEmpty()){
+
+                return null;
+
+            }
+            else{
+                return (JSONObject) resultsArray.get(0);
+            }
+
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -165,19 +192,29 @@ public class WeatherApi {
 
     }// End getCurrentTime
 
+    // Gets the weather code and converts it to a string value
     private static String convertWeatherCode(long weatherCode){
+
         String weatherCondition = "";
-        if (weatherCode == 0L){
+        if (weatherCode == 0L)
+        {
             weatherCondition = "Clear";
-        }else if (weatherCode <= 3L && weatherCode > 0L){
-            weatherCondition = "Cloudy";
-        }else if (weatherCode <= 67L && weatherCode >= 51L){
-
-            
-
         }
+        else if (weatherCode <= 3L && weatherCode > 0L)
+        {
+            weatherCondition = "Cloudy";
+        }
+        else if ((weatherCode <= 67L && weatherCode >= 51L)
+        || (weatherCode <= 99L && weatherCode >= 80L))
+        {
+            weatherCondition = "Rain";
+        }
+        else if (weatherCode <= 77L && weatherCode >= 71L)
+        {
+            weatherCondition = "Snow";
+        }// End if
 
-        return null;
+        return weatherCondition;
 
-    }
+    }// End converWeatherCode
 }
