@@ -290,6 +290,7 @@ public class GUI extends JFrame
 
     }// end cityWeatherData
 
+    // Function to transition the background colour of a panel
     public void transitionBackgroundColour(final JPanel panel, final Color start, final Color end, int duration) {
         final int steps = 100;
         final int delay = duration / steps;
