@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.IOException;
 import java.awt.event.ActionEvent;
 import java.awt.BorderLayout;
+import java.awt.event.*;
 
 public class GUI extends JFrame
 {
@@ -196,6 +197,12 @@ public class GUI extends JFrame
     // Function to get weather data for the city the user inputted
     public void cityWeatherData()
     {
+        Color rainColour  = new Color(176, 196, 222);
+        Color snowColour = new Color(240, 248, 255);
+        Color sunnyColour = new Color(173, 216, 230);
+        Color cloudyColour = Color.LIGHT_GRAY;
+
+
 
         // Get location
         String userInput = searchBar.getText();
@@ -224,23 +231,46 @@ public class GUI extends JFrame
         {
 
             String weatherCondition = weatherData.get("weatherCondition").toString();
+            Color currentColour = centerPanel.getBackground();
 
             switch (weatherCondition)
             {
                 case "Rain":
                     weatherConditionIcon.setIcon(loadImage("src/assets/rain.png", 100, 100));
+                    transitionBackgroundColour(centerPanel, currentColour, rainColour, 1000);
+                    transitionBackgroundColour(bottomPanel, currentColour, rainColour, 1000);
+                    transitionBackgroundColour(topPanel, currentColour, rainColour, 1000);
+                    transitionBackgroundColour((JPanel)getContentPane(), currentColour, rainColour, 1000);
                     break;
 
                 case "Snow":
                     weatherConditionIcon.setIcon(loadImage("src/assets/snow.png", 100, 100));
+                    transitionBackgroundColour(centerPanel, currentColour, snowColour, 1000);
+                    transitionBackgroundColour(bottomPanel, currentColour, snowColour, 1000);
+                    transitionBackgroundColour(topPanel, currentColour, snowColour, 1000);
+                    transitionBackgroundColour((JPanel)getContentPane(), currentColour, snowColour, 1000);
                     break;
 
                 case "Clear":
                     weatherConditionIcon.setIcon(loadImage("src/assets/sunny.png", 100, 100));
+                    transitionBackgroundColour(centerPanel, currentColour, sunnyColour, 1000);
+                    transitionBackgroundColour(bottomPanel, currentColour, sunnyColour, 1000);
+                    transitionBackgroundColour(topPanel, currentColour, sunnyColour, 1000);
+                    transitionBackgroundColour((JPanel)getContentPane(), currentColour, sunnyColour, 1000);
+
+
+
+
                     break;
 
                 case "Cloudy":
                     weatherConditionIcon.setIcon(loadImage("src/assets/cloudy.png", 100, 100));
+                    transitionBackgroundColour(centerPanel, currentColour, cloudyColour, 1000);
+                    transitionBackgroundColour(bottomPanel, currentColour, cloudyColour, 1000);
+                    transitionBackgroundColour(topPanel, currentColour, cloudyColour, 1000);
+                    transitionBackgroundColour((JPanel)getContentPane(), currentColour, cloudyColour, 1000);
+
+
                     break;
 
             }
@@ -259,5 +289,29 @@ public class GUI extends JFrame
         }// end if else
 
     }// end cityWeatherData
+
+    public void transitionBackgroundColour(final JPanel panel, final Color start, final Color end, int duration) {
+        final int steps = 100;
+        final int delay = duration / steps;
+
+        Timer timer = new Timer(delay, null);
+        timer.addActionListener(new ActionListener() {
+            int step = 0;
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                float ratio = (float) step / (float) steps;
+                int red = (int) (start.getRed() * (1 - ratio) + end.getRed() * ratio);
+                int green = (int) (start.getGreen() * (1 - ratio) + end.getGreen() * ratio);
+                int blue = (int) (start.getBlue() * (1 - ratio) + end.getBlue() * ratio);
+                panel.setBackground(new Color(red, green, blue));
+                step++;
+                if (step > steps) {
+                    ((Timer)e.getSource()).stop();
+                }
+            }
+        });
+        timer.start();
+    }
 
 }// End GUI class
